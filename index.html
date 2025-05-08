@@ -3,28 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Space Explorer</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Random Quote Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1f2833;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+
+    .box {
+      background-color: #0b0c10;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 600px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #45a29e;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #66fcf1;
+      color: #0b0c10;
+    }
+
+    .quote {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .author {
+      font-style: italic;
+      color: #c5c6c7;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>🚀 NASA Space Explorer</h1>
-    <p>Explore the universe one day at a time</p>
-  </header>
+  <div class="box">
+    <div id="quote" class="quote">Click the button to get a quote</div>
+    <div id="author" class="author"></div>
+    <button onclick="getQuote()">Get Quote</button>
+  </div>
 
-  <section class="controls">
-    <label for="apiKey">Enter your NASA API Key:</label>
-    <input type="text" id="apiKey" placeholder="API Key" />
-    
-    <label for="datePicker">Choose a date:</label>
-    <input type="date" id="datePicker" />
-    
-    <button id="loadBtn">Load Image</button>
-  </section>
-
-  <section id="result" class="result"></section>
-
-  <script src="script.js"></script>
+  <script>
+    function getQuote() {
+      fetch('https://api.quotable.io/random')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('quote').textContent = `"${data.content}"`;
+          document.getElementById('author').textContent = `— ${data.author}`;
+        })
+        .catch(err => {
+          document.getElementById('quote').textContent = "Oops! Couldn't fetch a quote.";
+          document.getElementById('author').textContent = "";
+        });
+    }
+  </script>
 </body>
 </html>
-
