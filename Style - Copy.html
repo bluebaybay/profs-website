@@ -1,32 +1,66 @@
-document.getElementById("loadBtn").addEventListener("click", function () {
-  const apiKey = document.getElementById("apiKey").value.trim();
-  const date = document.getElementById("datePicker").value;
-  if (!apiKey || !date) {
-    alert("Please enter both API key and date.");
-    return;
-  }
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #0b0c10;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
 
-  sessionStorage.setItem("nasaApiKey", apiKey);
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`;
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
 
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const result = document.getElementById("result");
-      if (data.media_type === "image") {
-        result.innerHTML = `
-          <h2>${data.title}</h2>
-          <p><strong>Date:</strong> ${data.date}</p>
-          <img src="${data.url}" alt="${data.title}" />
-          <p>${data.explanation}</p>
-        `;
-      } else {
-        result.innerHTML = `<p>This date's content is not an image. Please choose another date.</p>`;
-      }
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Failed to fetch data. Please check your API key.");
-    });
-});
+.controls {
+  background-color: #1f2833;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 90%;
+  max-width: 500px;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+}
+
+input {
+  width: 100%;
+}
+
+button {
+  background-color: #45a29e;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #66fcf1;
+  color: #0b0c10;
+}
+
+.result {
+  text-align: center;
+  max-width: 800px;
+}
+
+.result img {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 10px;
+}
