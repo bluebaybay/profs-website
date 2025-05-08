@@ -1,64 +1,31 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #0b0c10;
-  color: white;
-  margin: 0;
-  padding: 20px;
-  text-align: center;
-}
+function fetchPicture() {
+  const apiKey = document.getElementById("apiKey").value.trim();
+  const date = document.getElementById("datePicker").value;
+  const output = document.getElementById("output");
 
-header {
-  margin-bottom: 20px;
-}
+  if (!apiKey || !date) {
+    alert("Please enter both API key and date.");
+    return;
+  }
 
-main {
-  max-width: 800px;
-  margin: auto;
-}
+  const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`;
 
-a.button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #45a29e;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-}
-
-a.button:hover {
-  background-color: #66fcf1;
-  color: #0b0c10;
-}
-
-.controls {
-  background: #1f2833;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-input, button {
-  padding: 10px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  width: 100%;
-}
-
-button {
-  background-color: #45a29e;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #66fcf1;
-  color: #0b0c10;
-}
-
-.output img {
-  max-width: 100%;
-  margin-top: 20px;
-  border-radius: 10px;
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.media_type === "image") {
+        output.innerHTML = `
+          <h2>${data.title}</h2>
+          <p><strong>Date:</strong> ${data.date}</p>
+          <img src="${data.url}" alt="NASA APOD" />
+          <p>${data.explanation}</p>
+        `;
+      } else {
+        output.innerHTML = `<p>This date's content is not an image. Try another one.</p>`;
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      output.innerHTML = `<p>Error fetching data. Check your API key and try again.</p>`;
+    });
 }
