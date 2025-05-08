@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Random Quote Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quote Generator</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: Arial, sans-serif;
       background-color: #1f2833;
       color: white;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
+      padding: 20px;
       text-align: center;
     }
 
@@ -57,22 +58,23 @@
   <div class="box">
     <div id="quote" class="quote">Click the button to get a quote</div>
     <div id="author" class="author"></div>
-    <button onclick="getQuote()">Get Quote</button>
+    <button id="quoteBtn">Get Quote</button>
   </div>
 
   <script>
-    function getQuote() {
-      fetch('https://api.quotable.io/random')
-        .then(response => response.json())
+    document.getElementById("quoteBtn").addEventListener("click", function() {
+      fetch("https://api.quotable.io/random")
+        .then(res => res.json())
         .then(data => {
-          document.getElementById('quote').textContent = `"${data.content}"`;
-          document.getElementById('author').textContent = `— ${data.author}`;
+          document.getElementById("quote").textContent = `"${data.content}"`;
+          document.getElementById("author").textContent = `— ${data.author}`;
         })
-        .catch(err => {
-          document.getElementById('quote').textContent = "Oops! Couldn't fetch a quote.";
-          document.getElementById('author').textContent = "";
+        .catch(error => {
+          document.getElementById("quote").textContent = "Could not fetch a quote.";
+          document.getElementById("author").textContent = "";
+          console.error("Fetch error:", error);
         });
-    }
+    });
   </script>
 </body>
 </html>
