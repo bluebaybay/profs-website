@@ -1,40 +1,32 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-  background: #0b0c10;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
+document.getElementById("loadBtn").addEventListener("click", function () {
+  const apiKey = document.getElementById("apiKey").value.trim();
+  const date = document.getElementById("datePicker").value;
+  if (!apiKey || !date) {
+    alert("Please enter both API key and date.");
+    return;
+  }
 
-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+  sessionStorage.setItem("nasaApiKey", apiKey);
 
-.controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+  const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`;
 
-input, button {
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-}
-
-#result {
-  max-width: 800px;
-  text-align: center;
-}
-
-#result img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-top: 20px;
-}
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const result = document.getElementById("result");
+      if (data.media_type === "image") {
+        result.innerHTML = `
+          <h2>${data.title}</h2>
+          <p><strong>Date:</strong> ${data.date}</p>
+          <img src="${data.url}" alt="${data.title}" />
+          <p>${data.explanation}</p>
+        `;
+      } else {
+        result.innerHTML = `<p>This date's content is not an image. Please choose another date.</p>`;
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Failed to fetch data. Please check your API key.");
+    });
+});
