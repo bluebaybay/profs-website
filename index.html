@@ -1,18 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>NASA Space Explorer</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-color: #0b0c10;
+      --primary-color: #1f2833;
+      --accent-color: #45a29e;
+      --hover-color: #66fcf1;
+      --text-color: #ffffff;
+      --light-text: #c5c6c7;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+      text-align: center;
+    }
+
+    header {
+      padding: 30px 10px;
+      background-color: var(--primary-color);
+      border-bottom: 4px solid var(--accent-color);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: var(--hover-color);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: var(--light-text);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+    }
+
+    .controls {
+      background-color: var(--primary-color);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px var(--shadow);
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    .controls label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: var(--light-text);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+    }
+
+    input {
+      background-color: #f4f4f4;
+      color: #111;
+    }
+
+    button {
+      background-color: var(--accent-color);
+      color: white;
+      font-weight: bold;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: var(--hover-color);
+      color: var(--bg-color);
+    }
+
+    .output {
+      background-color: var(--primary-color);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px var(--shadow);
+      margin-top: 20px;
+    }
+
+    .output img {
+      max-width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    .output h2 {
+      color: var(--hover-color);
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--light-text);
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>🚀 NASA Space Explorer</h1>
+    <p>Explore NASA's Astronomy Picture of the Day</p>
   </header>
 
   <main>
-    <p>Welcome! Use this site to explore NASA's Astronomy Picture of the Day.</p>
-    <a href="picture.html" class="button">Go to Picture Viewer</a>
+    <div class="controls">
+      <label for="apiKey">Enter your NASA API Key:</label>
+      <input type="text" id="apiKey" placeholder="e.g. DEMO_KEY" />
+
+      <label for="datePicker">Choose a Date:</label>
+      <input type="date" id="datePicker" />
+
+      <button onclick="fetchAPOD()">Get Picture</button>
+    </div>
+
+    <div id="output" class="output"></div>
   </main>
+
+  <footer>
+    <p>&copy; 2025 NASA Space Explorer</p>
+  </footer>
+
+  <script>
+    function fetchAPOD() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const date = document.getElementById('datePicker').value;
+      const output = document.getElementById('output');
+
+      if (!apiKey || !date) {
+        output.innerHTML = "<p>Please enter both API key and date.</p>";
+        return;
+      }
+
+      const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.media_type === "image") {
+            output.innerHTML = `
+              <h2>${data.title}</h2>
+              <p><strong>Date:</strong> ${data.date}</p>
+              <img src="${data.url}" alt="${data.title}" />
+              <p>${data.explanation}</p>
+            `;
+          } else {
+            output.innerHTML = `<p>This content is not an image. Try another date.</p>`;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          output.innerHTML = `<p>Error fetching data. Check your API key and date.</p>`;
+        });
+    }
+  </script>
 </body>
 </html>
